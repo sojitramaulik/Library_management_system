@@ -18,6 +18,9 @@ model Student {
   firstname String
   lastname String
   phoneno String
+  email String @unique
+  password String
+  image String?
 
   issues BookIssue[]
 }
