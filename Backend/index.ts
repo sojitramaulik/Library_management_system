@@ -4,11 +4,13 @@ const  studentRoutes  = require('./routes/student.route.ts');
 const fetchData = require('./routes/fetchData.route.ts');
 const bookRoutes = require('./routes/book.route.ts');
 const bookIssueRoutes = require('./routes/bookIssue.route.ts');
+import cookieParser from "cookie-parser";
 
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 
 // Api's

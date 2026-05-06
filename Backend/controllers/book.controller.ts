@@ -5,22 +5,23 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 type BodyType = {
-  bookname: string;
+  bookName: string;
   sem: number;
 }
-
 
 const book = async (req:Request<{},{},BodyType>, res:Response) => {
       
   try {
-     const {bookname,sem} = req.body;
+     const {bookName,sem} = req.body;
+
+     // Validation schema for book data *************************************************************
 
       const schema = Joi.object({ 
-              bookname: Joi.string().required(),
+              bookName: Joi.string().required(),
               sem: Joi.number().greater(1).required()
             })
 
-      const {error,value} = schema.validate({ bookname, sem }, {
+      const {error,value} = schema.validate({ bookName, sem }, {
         abortEarly: false,
       });
 
@@ -28,10 +29,12 @@ const book = async (req:Request<{},{},BodyType>, res:Response) => {
         return res.status(400).json({ error: error.details.map((detail) => detail.message) });
       }
 
+      // Save book data to the database  ********************************************************
+
       const bookData = await prisma.Book.create({
           
         data: {
-            bookname,
+            bookName,
             sem
         }
         });

@@ -6,9 +6,9 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 type BodyType = {
-  firstname?: string;
-  lastname?: string;
-  bookname?: string;
+  firstName?: string;
+  lastName?: string;
+  bookName?: string;
   issue_date: string;
   sub_date: string;
 }
@@ -16,13 +16,25 @@ type BodyType = {
 const fetchData = async (req:Request<{}, {}, BodyType>, res:Response) => {
 
         try {
-            const { firstname, lastname, bookname, issue_date, sub_date } = req.body;
+            const { firstName, lastName, bookName, issue_date, sub_date } = req.body;
+
+            // Validate the first name, last name, and book name using Joi with optional fields and allowing empty strings ****************************************************
 
             const fetchData = Joi.object({
-                firstname: Joi.string().allow('').optional(),
-                lastname: Joi.string().allow('').optional(),
-                bookname: Joi.string().allow('').optional(),
+                firstName: Joi.string().allow('').optional(),
+                lastName: Joi.string().allow('').optional(),
+                bookName: Joi.string().allow('').optional(),
             });
+
+            const fetchResult = fetchData.validate({ firstName, lastName, bookName }, {
+              abortEarly: false,
+            });
+
+            if (fetchResult.error) {
+              return res.status(400).json({ error: fetchResult.error.details.map((detail) => detail.message) });
+            }
+
+            // Validate the issue date and submission date using Joi with custom validation  *******************************************************
 
             const dateSchema = Joi.object({
                     issue_date: Joi.string().required(),
@@ -47,21 +59,15 @@ const fetchData = async (req:Request<{}, {}, BodyType>, res:Response) => {
             if (dateResult.error) {
               return res.status(400).json({ error: dateResult.error.details.map((detail) => detail.message) });
             }
-
-            const fetchResult = fetchData.validate({ firstname, lastname, bookname }, {
-              abortEarly: false,
-            });
-
-            if (fetchResult.error) {
-              return res.status(400).json({ error: fetchResult.error.details.map((detail) => detail.message) });
-            }
+ 
+            // Fetch data from the database using Prisma with optional filters based on the provided criteria  *******************************************************
 
             const clean = (val:any) => val && val.trim() !== '' ? val : undefined; 
 
             const data = await prisma.student.findMany({
                     where: {
-                      ...(clean(firstname) && { firstname }),
-                      ...(clean(lastname) && { lastname }),
+                      ...(clean(firstName) && { firstName }),
+                      ...(clean(lastName) && { lastName }),
 
                       issues: {
                         some: {
@@ -75,10 +81,10 @@ const fetchData = async (req:Request<{}, {}, BodyType>, res:Response) => {
                               lte: new Date(sub_date)
                             }
                           }),
-                          ...(bookname && {
+                          ...(bookName && {
                             book: {
-                              bookname: {
-                                contains: clean(bookname),
+                              bookName: {
+                                contains: clean(bookName),
                                 mode: "insensitive"
                               }
                             }
@@ -89,9 +95,9 @@ const fetchData = async (req:Request<{}, {}, BodyType>, res:Response) => {
 
                     select: {
                       id: true,
-                      firstname: true,
-                      lastname: true,
-                      phoneno: true,
+                      firstName: true,
+                      lastName: true,
+                      phoneNo: true,
 
                       issues: {
                         where: {
@@ -105,10 +111,10 @@ const fetchData = async (req:Request<{}, {}, BodyType>, res:Response) => {
                               lte: new Date(sub_date)
                             }
                           }),
-                          ...(bookname && {
+                          ...(bookName && {
                             book: {
-                              bookname: {
-                                contains: clean(bookname),
+                              bookName: {
+                                contains: clean(bookName),
                                 mode: "insensitive"
                               }
                             }

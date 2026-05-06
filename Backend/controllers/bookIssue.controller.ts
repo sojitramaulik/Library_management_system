@@ -17,6 +17,8 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
   try {
     
         const {s_id, b_id, iss_date, sub_date} = req.body;
+
+        // Validate the student ID and book ID using Joi *************************************
       
         const schema = Joi.object({ 
           s_id: Joi.number().greater(1).required(),
@@ -30,6 +32,8 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
         if (error) {
           return res.status(400).json({ error: error.details.map((detail) => detail.message) });
         }
+
+        // Validate the issue date and submission date using Joi with custom validation  
 
         const dateSchema = Joi.object({
                               iss_date: Joi.string().required(),
@@ -55,6 +59,8 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
                    return res.status(400).json({ error: dateResult.error.details.map((detail) => detail.message) });
                  }
         
+        // Check if the student and book exist in the database  ********************************
+        
         const student = await prisma.student.findUnique({
           where: { 
           id: s_id
@@ -64,6 +70,8 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
         if (!student) {
           return res.status(404).json({ error: 'Student not found' });
         }
+
+        // Check if the book exists in the database ********************************
       
         const book = await prisma.book.findUnique({
           where: { id:b_id },
@@ -73,7 +81,8 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
           return res.status(404).json({ error: 'Book not found' });
         }
       
-      
+        // Save the book issue data to the database using Prisma ********************************
+        
         const data = await prisma.bookIssue.create({
           data: {
             s_id,
