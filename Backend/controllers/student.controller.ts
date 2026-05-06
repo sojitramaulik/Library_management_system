@@ -71,6 +71,10 @@ const student = async (req:Request<{}, {}, BodyType>, res:Response) => {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // Handle file upload and get the image URL  ********************************
+
+      const imageUrl = req.file ? req.file?.path: null;
+
       // Save the student data to the database using Prisma  ********************************
 
       const studentData = await prisma.student.create({
@@ -80,7 +84,8 @@ const student = async (req:Request<{}, {}, BodyType>, res:Response) => {
           lastName,
           phoneNo,
           email,
-          password: hashedPassword
+          password: hashedPassword,
+          image: imageUrl,
         },
       });
 
