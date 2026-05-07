@@ -52,7 +52,7 @@ const student = async (req:Request<{}, {}, BodyType>, res:Response) => {
       });
 
       if (error) {
-        return res.status(400).json({ error: error.details.map((detail) => detail.message) });
+        return res.status(400).json({ message: error.details.map((detail) => detail.message) });
       }
  
       // Check if the email already exists in the database using Prisma  ********************************
@@ -64,7 +64,7 @@ const student = async (req:Request<{}, {}, BodyType>, res:Response) => {
       });
 
       if (existingEmail) {
-        return res.status(400).json({ error: 'Email already exists' });
+        return res.status(400).json({ message: 'Email already exists' });
       }
 
       // Hash the password using Bcrypt  ********************************
@@ -93,7 +93,7 @@ const student = async (req:Request<{}, {}, BodyType>, res:Response) => {
 
       
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while saving student data' });
+      res.status(500).json({ message: 'An error occurred while saving student data' });
     }
       
     }
