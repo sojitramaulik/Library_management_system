@@ -1,22 +1,34 @@
-
 import './App.css'
-import { Button, Container, Typography } from "@mui/material";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Homepage from './pages/HomePage.tsx';
+import SignUp from './pages/Auth/SignUp.tsx';
+import SignIn from './pages/Auth/SignIn.tsx';
 
 function App() {
 
+  const appRouter = createBrowserRouter([
+    {
+      path: "/",
+      element: <Homepage />
+    },
+    {
+      path: "/auth/signup",
+      element: <SignUp />
+    },
+    {
+      path: "/auth/signin",
+      element: <SignIn />
+    }
+  ]);
+
+  
   return (
     <>
-      <Container>
-        <Typography variant="h3" gutterBottom>
-          Library Management System
-        </Typography>
-
-        <Button variant="contained" color="primary">
-          Add Book
-        </Button>
-      </Container>
+     <div>
+        <RouterProvider router={appRouter} />
+     </div>
     </>
   );
 }
 
-export default App
+export default App;
