@@ -15,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import axios,{ AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import { styled } from "@mui/material/styles";
 
@@ -89,7 +90,7 @@ interface SignUpProps {
 export default function SignUp(props: SignUpProps) {
 
   const formRef = React.useRef<HTMLFormElement | null>(null);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = React.useState({
     firstName: "",
@@ -167,6 +168,17 @@ export default function SignUp(props: SignUpProps) {
     if (!image.files || image.files.length === 0) {
       newErrors.image = "Please upload an image";
       isValid = false;
+    } else {
+      
+      const file = image.files[0];
+      
+      const maxSize = 500 * 1024; // 500KB
+
+      if (file.size > maxSize) {
+        newErrors.image = "Image size must be less than 500KB";
+        isValid = false;
+      }
+ 
     }
 
     setErrors(newErrors);
@@ -178,15 +190,19 @@ export default function SignUp(props: SignUpProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    
+    
     const isValid = validateInputs();
     if (!isValid) return;
-
-    const data = new FormData(event.currentTarget);
-
+    
     setLoading(true);
 
+
     try {
+
+      
+      const data = new FormData(event.currentTarget);
+
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/register`,
         data,
@@ -197,11 +213,11 @@ export default function SignUp(props: SignUpProps) {
         },
       );
 
-      console.log("API Response:", response);
+      console.log( response.data);
+
+      alert("Signup Successful");
 
       formRef.current?.reset();
-
-      navigate("/auth/signin");
 
       setErrors({
         firstName: "",
@@ -212,13 +228,17 @@ export default function SignUp(props: SignUpProps) {
         image: "",
       });
 
-      
+      navigate("/auth/signin");
       
 
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
 
       alert(err.response?.data?.message || "Something went wrong");
+
+      //formRef.current?.reset();
+
+
     } finally {
       setLoading(false);
     }
@@ -329,6 +349,7 @@ export default function SignUp(props: SignUpProps) {
                 name="password"
                 type="password"
                 placeholder="••••••"
+                autoComplete="newPassword"
                 fullWidth
                 required
                 error={!!errors.password}
@@ -362,9 +383,7 @@ export default function SignUp(props: SignUpProps) {
               variant="contained"
               disabled={loading}
               size="large"
-              onClick={() => {console.log("Submit button clicked",loading)}}
             >
-             
               {loading ? "Submitting..." : "Sign up"}
             </Button>
           </Box>

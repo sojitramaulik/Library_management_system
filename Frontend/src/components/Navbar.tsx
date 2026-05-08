@@ -23,8 +23,12 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Library Management System
           </Typography>
-          <Button color="inherit">SignUp</Button>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href="/auth/signup" >
+            SignUp
+          </Button>
+          <Button color="inherit" href="/auth/signin"  >
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

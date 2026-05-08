@@ -16,6 +16,8 @@ import { styled } from "@mui/material/styles";
 import ForgotPassword from "../../components/signIn/ForgotPassword";
 import AppTheme from "../../material/customization/AppTheme";
 import ColorModeSelect from "../../material/customization/ColorModeSelect";
+import { useState } from "react";
+import axios, { AxiosError } from "axios";
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -66,6 +68,46 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [showOtp, setShowOtp] = useState(false);
+
+
+  // Function to handle sending OTP
+  const handleSendOtp = async ( ) => {
+
+    const email = (document.getElementById("email") as HTMLInputElement).value;
+
+    const password = (document.getElementById("password") as HTMLInputElement)
+      .value;
+
+    if (!email || !password) {
+      alert("Please enter your email address and password to receive the OTP.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/login`,
+        {
+          email,
+          password,
+        },
+      );
+
+      alert(response.data.message);
+
+      setShowOtp(true);
+
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+
+      console.log(err.response?.data)
+
+      alert(
+        err.response?.data?.message ||
+          "An error occurred while sending the OTP. Please try again.",
+      );
+    }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,17 +116,36 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const handleClose = () => {
     setOpen(false);
   };
+ 
+  // Function to handle OTP verification 
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const handleVerifyOtp = async () => {
+       
+       const email = (document.getElementById("email") as HTMLInputElement).value;
+
+       const otp = (document.getElementById("otp") as HTMLInputElement).value;
+
+       if (!otp) {
+         alert("Please enter the OTP");
+         return;
+       }
+
+       try{
+
+          const response = await axios.post(`${import.meta.env.VITE_API_URL}/otp/verify`, {
+            email,
+            otp,
+          });
+
+          console.log(response.data)
+
+       } catch (error: unknown) {
+
+          const err = error as AxiosError<{ message: string }>;
+          alert(err.response?.data?.message || "Invalid OTP");
+
+        }
+
   };
 
   const validateInputs = () => {
@@ -134,7 +195,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            // onClick={handleSendOtp}
             noValidate
             sx={{
               display: "flex",
@@ -177,19 +238,56 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? "error" : "primary"}
               />
             </FormControl>
+
+            {showOtp && (
+              <FormControl>
+                <FormLabel htmlFor="password">OTP</FormLabel>
+                <TextField
+                  name="otp"
+                  placeholder="Enter the OTP sent to your email"
+                  id="otp"
+                  required
+                  fullWidth
+                  variant="outlined"
+                  color={passwordError ? "error" : "primary"}
+                />
+              </FormControl>
+            )}
+
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={validateInputs}
-            >
-              Sign in
-            </Button>
+
+            {!showOtp && (
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  const isValid = validateInputs();
+
+                  if (isValid) {
+                    handleSendOtp();
+                  }
+                }}
+              >
+                Send OTP
+              </Button>
+            )}
+
+            {showOtp && (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={handleVerifyOtp}
+              >
+                Sign In
+              </Button>
+            )}
+
             <Link
               component="button"
               type="button"
@@ -202,7 +300,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Box>
           <Divider>or</Divider>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            
             <Typography sx={{ textAlign: "center" }}>
               Don&apos;t have an account?{" "}
               <Link
