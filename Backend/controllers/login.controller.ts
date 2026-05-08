@@ -108,7 +108,7 @@ export const verifyOtp = async (req: Request<{}, {}, OtpBodyType>, res: Response
                   secure:false
             });
 
-            return res.status(200).json({ message: 'Login successful' });
+            return res.status(200).json({ message: 'Login successful' , existingEmail});
 
 
       } catch (error) {
