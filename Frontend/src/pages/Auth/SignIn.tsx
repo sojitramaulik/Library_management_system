@@ -18,6 +18,10 @@ import AppTheme from "../../material/customization/AppTheme";
 import ColorModeSelect from "../../material/customization/ColorModeSelect";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {setUser} from "../../redux/authSlice";
+import type { RootState } from "../../redux/store";
+import { useRef } from "react";
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -62,6 +66,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+// component Function
+
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
@@ -69,6 +75,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [showOtp, setShowOtp] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const formRef = useRef(null);
 
 
   // Function to handle sending OTP
@@ -119,33 +129,37 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
  
   // Function to handle OTP verification 
 
-  const handleVerifyOtp = async () => {
-       
-       const email = (document.getElementById("email") as HTMLInputElement).value;
+  const handleVerifyOtp = async (event: React.FormEvent<HTMLFormElement>) => {
 
-       const otp = (document.getElementById("otp") as HTMLInputElement).value;
+    event.preventDefault()
 
-       if (!otp) {
-         alert("Please enter the OTP");
-         return;
-       }
+    const email = (document.getElementById("email") as HTMLInputElement).value;
 
-       try{
+    const otp = (document.getElementById("otp") as HTMLInputElement).value;
 
-          const response = await axios.post(`${import.meta.env.VITE_API_URL}/otp/verify`, {
-            email,
-            otp,
-          });
+    if (!otp) {
+      alert("Please enter the OTP");
+      return;
+    }
 
-          console.log(response.data)
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/otp/verify`,
+        { email, otp },
+        {
+          withCredentials: true,
+        },
+      );
 
-       } catch (error: unknown) {
+      dispatch(setUser(response.data.user));
 
-          const err = error as AxiosError<{ message: string }>;
-          alert(err.response?.data?.message || "Invalid OTP");
+      formRef.current?.reset();
 
-        }
-
+      console.log(response.data.user);
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+      alert(err.response?.data?.message || "Invalid OTP");
+    }
   };
 
   const validateInputs = () => {
@@ -195,8 +209,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Typography>
           <Box
             component="form"
-            // onClick={handleSendOtp}
+            onSubmit={handleVerifyOtp}
             noValidate
+            ref = {formRef}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -282,7 +297,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                onClick={handleVerifyOtp}
               >
                 Sign In
               </Button>
@@ -295,7 +309,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="body2"
               sx={{ alignSelf: "center" }}
             >
-              Forgot your password?
+              {user?.email}
             </Link>
           </Box>
           <Divider>or</Divider>
