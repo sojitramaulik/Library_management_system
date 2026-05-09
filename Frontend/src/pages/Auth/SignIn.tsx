@@ -21,7 +21,6 @@ import axios, { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {setUser} from "../../redux/authSlice";
 import type { RootState } from "../../redux/store";
-import { useRef } from "react";
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -78,8 +77,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const formRef = useRef(null);
+    const formRef = React.useRef<HTMLFormElement | null>(null);
 
+
+  if (user) {
+      return 
+    }
 
   // Function to handle sending OTP
   const handleSendOtp = async ( ) => {
@@ -309,7 +312,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="body2"
               sx={{ alignSelf: "center" }}
             >
-              {user?.email}
+              Forget Password
             </Link>
           </Box>
           <Divider>or</Divider>

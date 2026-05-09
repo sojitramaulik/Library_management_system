@@ -3,6 +3,7 @@ import './index.css'
 import App from './App.tsx'
 
 import { Provider } from 'react-redux'
+import "antd/dist/reset.css";
 
 import { store } from './redux/store'
 
