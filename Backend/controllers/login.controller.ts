@@ -140,3 +140,16 @@ export const logout = (req: Request, res: Response) => {
        }
         
 }  
+
+interface CustomRequest extends Request {
+   user?: any;
+}
+
+export const verifyToken = (req: CustomRequest, res: Response) => {
+
+      
+   res.status(200).json({
+      user: req.user
+    });
+
+}
