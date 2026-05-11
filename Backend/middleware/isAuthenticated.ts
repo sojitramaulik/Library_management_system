@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt, { decode } from "jsonwebtoken"
 
 const isAuthenticated = (req: any, res: any, next: any) => {
     const token = req.cookies.token;
@@ -9,8 +9,10 @@ const isAuthenticated = (req: any, res: any, next: any) => {
 
     try {
 
-       const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-       req.userId = decoded;
+       const decoded:any = jwt.verify(token, process.env.JWT_SECRET as string);
+
+
+       req.userId = decoded.userId;
        next();
 
     } catch (error) {

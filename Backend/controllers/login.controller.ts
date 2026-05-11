@@ -146,11 +146,37 @@ interface CustomRequest extends Request {
    user?: any;
 }
 
-export const verifyToken = (req: CustomRequest, res: Response) => {
+export const me = async (req: any, res: any) => {
+   try {
+      if (!req.userId) {
+        return res.status(401).json({
+          success: false,
+          message: "UserId missing in request",
+        });
+      }
 
+      const user = await prisma.student.findUnique({
+        where: {
+          id: req.userId,
+        },
+      });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        user,
+      });
       
-   res.status(200).json({
-      user: req.user
-    });
-
-}
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: "Server error",
+        });
+      }
+};
