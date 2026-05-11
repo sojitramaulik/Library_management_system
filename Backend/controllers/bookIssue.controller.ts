@@ -63,7 +63,7 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
         
         const student = await prisma.student.findUnique({
           where: { 
-          id: s_id
+          id: Number(s_id)
           },
         });
       
@@ -74,7 +74,9 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
         // Check if the book exists in the database ********************************
       
         const book = await prisma.book.findUnique({
-          where: { id:b_id },
+          where: { 
+            id: Number(b_id) 
+          },
         });
       
         if (!book) {
@@ -85,8 +87,8 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
         
         const data = await prisma.bookIssue.create({
           data: {
-            s_id,
-            b_id,
+            s_id: Number(s_id),
+            b_id: Number(b_id),
             iss_date: new Date(iss_date),
             sub_date: new Date(sub_date)
           },
@@ -95,9 +97,13 @@ const bookIssue = async (req:Request<{}, {}, BodyType>, res:Response) => {
         res.status(201).json({ message: 'Data saved successfully', data });
       }
 
-  catch (error) {
-    console.error('Error occurred while saving book issue data:', error);
-    res.status(500).json({ error: 'Internal server error' });
+  catch (error:any) {
+
+    console.log(error.message)
+
+    res.status(500).json({ 
+      error: error.message
+     });
   }  
 
 }

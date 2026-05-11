@@ -5,6 +5,7 @@ import axios from "axios";
 import { DatePicker } from "antd";
 const { RangePicker } = DatePicker;
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 
 type LayoutType = Parameters<typeof Form>[0]["layout"];
 
@@ -23,7 +24,7 @@ export default function IssueBook() {
 
   const handleSubmit = async (values: formData) => {
 
-    if (!values.s_id || !values.b_id || !values.dates || !values.layout ){
+    if (!values.s_id || !values.b_id || !values.dates ){
          alert("All Feilds are required")
          return 
     }
@@ -42,17 +43,20 @@ export default function IssueBook() {
      try {
        const response = await axios.post(
          `${import.meta.env.VITE_API_URL}/book/issue`,
-         formattedData,
+         formattedData,{
+          withCredentials:true
+         }
        );
 
       console.log(response);
 
-      alert("Data Added Successfully");
+      toast.success("Data Added Successfully");
 
       form.resetFields();
 
-    } catch (error) {
-      console.error("Failed to add Book", error);
+    } catch (error:any) {
+      console.log(error.response.data);
+      toast.error("Failed to add Book");
       form.resetFields();
     }
   };
@@ -94,9 +98,7 @@ export default function IssueBook() {
           <Form.Item label="Issue & Return Date" name="dates">
             <RangePicker
               style={{ width: "100%" }}
-              disabledDate={(current) =>
-                current && current < dayjs().startOf("day")
-              }
+             
             />
           </Form.Item>
 

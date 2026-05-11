@@ -21,6 +21,8 @@ import axios, { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {setUser} from "../../redux/authSlice";
 import type { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -75,6 +77,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [open, setOpen] = React.useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const user = useSelector((state: RootState) => state.auth.user);
 
     const formRef = React.useRef<HTMLFormElement | null>(null);
@@ -106,7 +109,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         },
       );
 
-      alert(response.data.message);
+      toast.success(response.data.message);
 
       setShowOtp(true);
 
@@ -114,8 +117,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       const err = error as AxiosError<{ message: string }>;
 
       console.log(err.response?.data)
+      
+      toast.error("An error occurred while sending the OTP. Please try again.");
 
-      alert(
+      console.log(
         err.response?.data?.message ||
           "An error occurred while sending the OTP. Please try again.",
       );
@@ -156,12 +161,16 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       dispatch(setUser(response.data.user));
 
+      toast.success("User Login successfully ")
+
       formRef.current?.reset();
 
-      console.log(response.data.user);
+      navigate("/dashboard");
+
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;
-      alert(err.response?.data?.message || "Invalid OTP");
+      toast.error("Invalid Otp")
+      console.log(err.response?.data?.message || "Invalid OTP");
     }
   };
 

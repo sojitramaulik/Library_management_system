@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { styled } from "@mui/material/styles";
-
+import toast from "react-hot-toast";
 import AppTheme from "../../material/customization/AppTheme.tsx";
 import ColorModeSelect from "../../material/customization/ColorModeSelect.tsx";
 
@@ -215,7 +215,7 @@ export default function SignUp(props: SignUpProps) {
 
       console.log( response.data);
 
-      alert("Signup Successful");
+      toast.success("Signup Successful");
 
       formRef.current?.reset();
 
@@ -234,7 +234,8 @@ export default function SignUp(props: SignUpProps) {
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
 
-      alert(err.response?.data?.message || "Something went wrong");
+      console.log(err.response?.data?.message || "Something went wrong");
+      toast.error("Something went wrong");
 
       //formRef.current?.reset();
 

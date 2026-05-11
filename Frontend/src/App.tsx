@@ -10,6 +10,8 @@ import { setUser,logout } from './redux/authSlice.ts';
 import Dashboard from './pages/Dashboard.tsx'
 import AddBook from './pages/AddBook.tsx';
 import IssueBook from './pages/IssueBook.tsx';
+import ProtectedRoute from './utils/ProtectedRoute.tsx';
+import { Toaster } from "react-hot-toast";
 
 function App() {
 
@@ -18,6 +20,7 @@ function App() {
   useEffect(() => {
 
       const checkAuth = async () => {
+        
         try {
           const response = await axios.get(
             `${import.meta.env.VITE_API_URL}/me`,
@@ -27,9 +30,10 @@ function App() {
           );
 
           dispatch(setUser(response.data.user));
+
         } catch (error) {
           dispatch(logout());
-          console.log(error)
+          console.log("user not logged in")
         }
       };
 
@@ -52,24 +56,37 @@ function App() {
     },
     {
       path: "/dashboard",
-      element: <Dashboard />,
+      element: (
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/add/book",
-      element: <AddBook />
+      element: (
+        <ProtectedRoute>
+          <AddBook />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/book/issue",
-      element: <IssueBook />
-    }
+      element: (
+        <ProtectedRoute>
+          <IssueBook />
+        </ProtectedRoute>
+      ),
+    },
   ]);
 
   
   return (
     <>
-     <div>
+      <Toaster position="top-right" />
+      <div>
         <RouterProvider router={appRouter} />
-     </div>
+      </div>
     </>
   );
 }

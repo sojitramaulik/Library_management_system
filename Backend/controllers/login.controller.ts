@@ -105,7 +105,8 @@ export const verifyOtp = async (req: Request<{}, {}, OtpBodyType>, res: Response
 
             res.cookie('token', token, { 
                   httpOnly: true ,
-                  secure:false
+                  secure:false,
+                  sameSite:"lax"
             });
 
             

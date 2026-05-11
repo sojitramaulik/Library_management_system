@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 import Avatar from "@mui/material/Avatar";
+import { NavLink } from "react-router-dom";
 
 export default function ButtonAppBar() {
 
@@ -41,14 +42,38 @@ export default function ButtonAppBar() {
                   Library Management System
                 </Typography>
               </div>
-              <div className="flex justify-evenly ml-10 ">
-                <Button href="/add/book">Book</Button>
-                <Button href="/book/issue">BookIssue</Button>
-                <Button href="/dashboard">BookFetch</Button>
-              </div>
+
+              {user && (
+                <div className="flex gap-5 items-center ml-10 text-teal-400 ">
+                  <NavLink
+                    to="/add/book"
+                    className={({ isActive }) =>
+                      isActive ? "text-white px-4 py-2 rounded" : "px-4 py-2"
+                    }
+                  >
+                    Book
+                  </NavLink>
+                  <NavLink
+                    to="/book/issue"
+                    className={({ isActive }) =>
+                      isActive ? "text-white px-4 py-2 rounded" : "px-4 py-2"
+                    }
+                  >
+                    BookIssue
+                  </NavLink>
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                      isActive ? "text-white px-4 py-2 rounded" : "px-4 py-2"
+                    }
+                  >
+                    BookFetch
+                  </NavLink>
+                </div>
+              )}
             </div>
 
-            {user && (
+            {!user && (
               <div>
                 <Button color="inherit" href="/auth/signup">
                   SignUp
@@ -59,7 +84,7 @@ export default function ButtonAppBar() {
               </div>
             )}
 
-            {!user && (
+            {user && (
               <div className="flex p-2">
                 <div className="p-2">
                   <Button color="inherit" href="/auth/signup">

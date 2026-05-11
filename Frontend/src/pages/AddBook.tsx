@@ -3,6 +3,7 @@ import { Button, Form, Input, Radio } from "antd";
 import type { FormProps } from "antd";
 import { useRef } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 type LayoutType = Parameters<typeof Form>[0]["layout"];
 
@@ -35,17 +36,20 @@ export default function AddBook() {
         }
         
         try {
-           const response = await axios.post(`${import.meta.env.VITE_API_URL}/book`,bookData);
+           const response = await axios.post(`${import.meta.env.VITE_API_URL}/book`,bookData,{
+             withCredentials:true
+           });
 
            console.log(response)
 
-           alert("Book Added Successfully")
+           toast.success("Book Added Successfully")
 
            form.resetFields()
 
         } catch (error) {
 
-          console.error("Failed to add Book",error)
+          console.log("Failed to add Book",error)
+          toast.error("Failed to add Book");
           form.resetFields()
           
         }

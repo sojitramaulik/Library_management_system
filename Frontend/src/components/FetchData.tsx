@@ -6,6 +6,7 @@ import { DatePicker } from "antd";
 const { RangePicker } = DatePicker;
 import dayjs from "dayjs";
 import StudentTable from "./StudentTable";
+import toast from "react-hot-toast";
 
 type LayoutType = Parameters<typeof Form>[0]["layout"];
 
@@ -42,16 +43,19 @@ export default function FetchData() {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/fetch`,
-        formattedData,
+        formattedData,{
+          withCredentials:true
+        }
       );
 
       setResponse(response.data)
 
-      alert("Data Fetch Successfully");
+      toast.success("Data Fetch Successfully");
 
       form.resetFields();
     } catch (error) {
-      console.error("Failed to Fetch Data", error);
+      console.log("Failed to Fetch Data", error);
+      toast.success("Failed to Fetch Data");
       form.resetFields();
     }
   };
@@ -95,9 +99,7 @@ export default function FetchData() {
           <Form.Item label="Issue & Return Date" name="dates">
             <RangePicker
               style={{ width: "100%" }}
-              disabledDate={(current) =>
-                current && current < dayjs().startOf("day")
-              }
+          
             />
           </Form.Item>
 

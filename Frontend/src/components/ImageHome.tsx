@@ -37,6 +37,7 @@ export default function ImageHome() {
           {/* Description */}
           <Typography
             variant="h6"
+            component="div"
             sx={{
               color: "#f8fafc",
               marginTop: "20px",
