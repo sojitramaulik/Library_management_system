@@ -92,7 +92,6 @@ function App() {
       element: <Homepage />
     }
    
-
   ]);
 
   
