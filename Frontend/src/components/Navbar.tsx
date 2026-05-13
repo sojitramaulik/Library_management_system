@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 // import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
-import Avatar from "@mui/material/Avatar";
 import { NavLink } from "react-router-dom";
 import { Library } from "lucide-react";
 
@@ -42,7 +41,6 @@ export default function ButtonAppBar() {
           width: "100%",
           zIndex: 100,
         }}
-        className="!flex !p-2"
       >
         <Toolbar>
           {/* <IconButton
@@ -70,29 +68,37 @@ export default function ButtonAppBar() {
                   <NavLink
                     to="/add/book"
                     className={({ isActive }) =>
-                      isActive
-                        ? "text-white bg-[#084740] px-4 py-2 rounded"
-                        : "px-4 py-2"
+                      `
+                        relative text-slate-100 font-medium transition-all duration-300 hover:text-teal-300
+                        after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+                        after:bg-teal-300 after:transition-all after:duration-300
+                        ${isActive ? "text-teal-300 after:w-full drop-shadow-[0_0_8px_rgba(94,234,212,0.8)]" : "after:w-0 hover:after:w-full"}`
                     }
                   >
                     Book
                   </NavLink>
+
                   <NavLink
                     to="/book/issue"
                     className={({ isActive }) =>
-                      isActive
-                        ? "text-white bg-[#084740] px-4 py-2 rounded"
-                        : "px-4 py-2"
+                      `
+                        relative text-slate-100 font-medium transition-all duration-300 hover:text-teal-300
+                        after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+                        after:bg-teal-300 after:transition-all after:duration-300
+                        ${isActive ? "text-teal-300 after:w-full drop-shadow-[0_0_8px_rgba(94,234,212,0.8)]" : "after:w-0 hover:after:w-full"}`
                     }
                   >
                     BookIssue
                   </NavLink>
+
                   <NavLink
                     to="/dashboard"
                     className={({ isActive }) =>
-                      isActive
-                        ? "text-white bg-[#084740] px-4 py-2 rounded"
-                        : "px-4 py-2"
+                      `
+                        relative text-slate-100 font-medium transition-all duration-300 hover:text-teal-300
+                        after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+                        after:bg-teal-300 after:transition-all after:duration-300
+                        ${isActive ? "text-teal-300 after:w-full drop-shadow-[0_0_8px_rgba(94,234,212,0.8)]" : "after:w-0 hover:after:w-full"}`
                     }
                   >
                     BookFetch
@@ -163,8 +169,23 @@ export default function ButtonAppBar() {
                     Logout
                   </Button>
                 </div>
-                <div className="p-2">
-                  <Avatar alt={user?.firstName} src={user?.image} />
+                <div className="flex items-center gap-3">
+                  <img
+                    src={user?.image}
+                    alt="profile"
+                    className="
+                        w-11 h-11
+                        rounded-full
+                        object-cover
+                        border-2 border-teal-300
+                        hover:scale-105
+                        transition-all duration-300
+                        shadow-[0_0_18px_rgba(45,212,191,0.45)]
+                      "
+                  />
+                  <span className="text-slate-100 font-medium">
+                    {user?.firstName}
+                  </span>
                 </div>
               </div>
             )}

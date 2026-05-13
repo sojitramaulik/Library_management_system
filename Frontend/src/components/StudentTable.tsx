@@ -1,4 +1,6 @@
 import { Table, Tag } from "antd";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 interface Book {
   id: number;
@@ -18,17 +20,8 @@ interface Student {
   issues: Issue[];
 }
 
-interface Props {
-  response: {
-    data: Student[];
-  } | null ;
-}
-
-export default function StudentTable({ response }: Props) {
-
-  if (!response){
-       return <p>Loading.....</p>
-  }
+export default function StudentTable() {
+  const response = useSelector((state: RootState) => state.auth.students);
 
   // Main Student Table Columns
   const columns = [
@@ -55,7 +48,12 @@ export default function StudentTable({ response }: Props) {
       key: "booksCount",
 
       render: (_: unknown, record: Student) => (
-        <Tag color="blue">{record.issues.length}</Tag>
+        <Tag
+          color="cyan"
+          className="px-3 py-1 rounded-full text-sm font-semibold"
+        >
+          {record.issues.length}
+        </Tag>
       ),
     },
   ];
@@ -82,20 +80,45 @@ export default function StudentTable({ response }: Props) {
         dataSource={record.issues}
         pagination={false}
         rowKey={(issue) => issue.book.id}
+        className="custom-table"
       />
     );
   };
 
   return (
-    <div className="p-5">
-      <Table
-        columns={columns}
-        dataSource={response.data}
-        expandable={{
-          expandedRowRender,
-        }}
-        rowKey="id"
-      />
+    <div className="min-h-screen bg-gradient-to-br from-[#021414] via-[#042f2e] to-[#134e4a] p-8">
+      {/* Heading */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-black text-white">Student Records</h1>
+
+        <p className="text-slate-300 mt-2 text-lg">
+          Manage issued books and students
+        </p>
+      </div>
+
+      {/* Table Card */}
+      <div
+        className="
+          bg-white/10
+          backdrop-blur-xl
+          border
+          border-white/10
+          rounded-3xl
+          shadow-2xl
+          overflow-hidden
+          p-5
+        "
+      >
+        <Table
+          columns={columns}
+          dataSource={Array.isArray(response) ? response : []}
+          expandable={{
+            expandedRowRender,
+          }}
+          rowKey="id"
+          className="custom-table"
+        />
+      </div>
     </div>
   );
 }

@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+.custom-table .ant-table {
+  background: transparent !important;
+  color: white !important;
+}
+
+.custom-table .ant-table-thead>tr>th {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #5eead4 !important;
+  font-size: 15px;
+  border-bottom: none !important;
+}
+
+.custom-table .ant-table-tbody>tr>td {
+  background: transparent !important;
+  color: white !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.custom-table .ant-table-row-expand-icon {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: white !important;
+}
+
+.custom-table .ant-pagination-item {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+}
+
+.custom-table .ant-pagination-item a {
+  color: white;
+}
+
+.custom-table .ant-pagination-item-active {
+  background: #14b8a6;
+}
+
+.custom-table .ant-pagination-item-active a {
+  color: white;
+}

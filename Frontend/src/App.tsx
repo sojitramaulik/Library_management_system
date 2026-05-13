@@ -12,6 +12,7 @@ import AddBook from './pages/AddBook.tsx';
 import IssueBook from './pages/IssueBook.tsx';
 import ProtectedRoute from './utils/ProtectedRoute.tsx';
 import { Toaster } from "react-hot-toast";
+import StudentTable from './components/StudentTable.tsx';
 
 function App() {
 
@@ -78,6 +79,20 @@ function App() {
         </ProtectedRoute>
       ),
     },
+    {
+       path:"/data",
+       element: (
+         <ProtectedRoute>
+             <StudentTable />
+         </ProtectedRoute>
+       )
+    },
+    {
+      path: "/*",
+      element: <Homepage />
+    }
+   
+
   ]);
 
   

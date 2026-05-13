@@ -11,12 +11,38 @@ interface User {
   image: string
 }
 
+interface Book {
+    id: number;
+    bookName: string;
+    sem: string;
+}
+
+interface Issue {
+  book: Book;
+}
+
+interface Student {
+   id: number;
+
+  firstName: string;
+
+  lastName: string;
+
+  phoneNo: string;
+
+  issues: Issue[];
+}
+
+
+
 interface AuthState {
   user: User | null;
+  students: Student[];
 }
 
 const initialState: AuthState = {
   user:null,
+  students:[],
 }
 
 const authSlice = createSlice({
@@ -32,6 +58,10 @@ const authSlice = createSlice({
           state.user = action.payload;
      },
 
+     setStudents : (state, action: PayloadAction<Student[]> ) => {
+            state.students = action.payload
+     },
+
      logout: (state) => {
             state.user = null
      },
@@ -39,6 +69,6 @@ const authSlice = createSlice({
 
 })
 
-export const {setUser, logout} = authSlice.actions;
+export const {setUser, logout, setStudents } = authSlice.actions;
 
 export default authSlice.reducer;
