@@ -1,18 +1,18 @@
 import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Homepage from './pages/HomePage.tsx';
-import SignUp from './pages/Auth/SignUp.tsx';
-import SignIn from './pages/Auth/SignIn.tsx';
-import { useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setUser,logout } from './redux/authSlice.ts';
-import Dashboard from './pages/Dashboard.tsx'
-import AddBook from './pages/AddBook.tsx';
-import IssueBook from './pages/IssueBook.tsx';
-import ProtectedRoute from './utils/ProtectedRoute.tsx';
+import Homepage from "./pages/HomePage";
+import SignUp from "./pages/Auth/SignUp";
+import SignIn from "./pages/Auth/SignIn";
+import Dashboard from "./pages/Dashboard";
+import AddBook from "./pages/AddBook";
+import IssueBook from "./pages/IssueBook";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import StudentTable from "./components/StudentTable";
 import { Toaster } from "react-hot-toast";
-import StudentTable from './components/StudentTable.tsx';
+import { useEffect } from 'react';
+import { setUser,logout } from './redux/authSlice.ts';
+import { useDispatch } from 'react-redux';
 
 function App() {
 
