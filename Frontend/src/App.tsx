@@ -2,9 +2,9 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import axios from 'axios';
 import Homepage from "./pages/HomePage";
-import SignUp from "./pages/Auth/tempSignUp.tsx";
+import SignUp from "./pages/Auth/SignUp.tsx";
 import SignIn from "./pages/Auth/SignIn";
-import Dashboard from "./pages/tempDashboard.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 import AddBook from "./pages/AddBook";
 import IssueBook from "./pages/IssueBook";
 import ProtectedRoute from "./utils/ProtectedRoute";
