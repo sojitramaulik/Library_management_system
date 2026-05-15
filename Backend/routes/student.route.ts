@@ -3,11 +3,11 @@ import { upload } from "../config/multer";
 const express = require('express');
 const router = express.Router();
 
-const student = require('../controllers/student.controller.ts');
-const { login, logout } = require('../controllers/login.controller.ts');
-const isAuthenticated = require('../middleware/isAuthenticated.ts');
-const {verifyOtp} = require('../controllers/login.controller.ts');
-const {me} = require('../controllers/login.controller.ts')
+const student = require('../controllers/student.controller');
+const { login, logout } = require('../controllers/login.controller');
+const isAuthenticated = require('../middleware/isAuthenticated');
+const {verifyOtp} = require('../controllers/login.controller');
+const {me} = require('../controllers/login.controller')
 
 router.post('/register', upload.single('image'), student);
 router.post('/login', login);

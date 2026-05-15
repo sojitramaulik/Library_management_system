@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
-const  studentRoutes  = require('./routes/student.route.ts');
-const fetchData = require('./routes/fetchData.route.ts');
-const bookRoutes = require('./routes/book.route.ts');
-const bookIssueRoutes = require('./routes/bookIssue.route.ts');
+const  studentRoutes  = require('./routes/student.route');
+const fetchData = require('./routes/fetchData.route');
+const bookRoutes = require('./routes/book.route');
+const bookIssueRoutes = require('./routes/bookIssue.route');
 import cookieParser from "cookie-parser";
 
 

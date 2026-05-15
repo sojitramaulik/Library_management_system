@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const bookIssue = require('../controllers/bookIssue.controller.ts');
-const isAuthenticated = require('../middleware/isAuthenticated.ts');
+const bookIssue = require('../controllers/bookIssue.controller');
+const isAuthenticated = require('../middleware/isAuthenticated');
 
 router.post('/book/issue', isAuthenticated, bookIssue);
 
