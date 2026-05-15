@@ -1,6 +1,5 @@
 import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import axios from 'axios';
 import Homepage from "./pages/HomePage";
 import SignUp from "./pages/Auth/SignUp.tsx";
 import SignIn from "./pages/Auth/SignIn";
@@ -10,37 +9,8 @@ import IssueBook from "./pages/IssueBook";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import StudentTable from "./components/StudentTable";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from 'react';
-import { setUser,logout } from './redux/authSlice.ts';
-import { useDispatch } from 'react-redux';
 
 function App() {
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-
-      const checkAuth = async () => {
-        
-        try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/me`,
-            {
-              withCredentials: true,
-            }, 
-          );
-
-          dispatch(setUser(response.data.user));
-
-        } catch (error) {
-          dispatch(logout());
-          console.log("user not logged in")
-        }
-      };
-
-      checkAuth();
-
-  },[]);
 
   const appRouter = createBrowserRouter([
     {

@@ -1,19 +1,21 @@
 import { Navigate } from "react-router-dom";
 
-import { useSelector } from "react-redux";
+import { useAuth } from "react-oidc-context";
 
-import type { RootState } from "../redux/store";
+export default function ProtectedRoute({children}: any) {
 
-export default function ProtectedRoute({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const auth = useAuth();
 
-  if (!user) {
-    return <Navigate to="/" replace />;
+  if (auth.isLoading) {
+    return <h1>Loading...</h1>;
   }
 
+  if (!auth.isAuthenticated) {
+    auth.signinRedirect();
+    return null;
+  }
+
+  
   return children;
-}
+  
+};
