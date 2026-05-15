@@ -22,7 +22,7 @@ function App() {
       element: <SignUp />,
     },
     {
-      path: "/auth/signin",
+      path: "/auth/signin/*",
       element: <SignIn />,
     },
     {
